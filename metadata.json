@@ -1,0 +1,6 @@
+{
+  "name": "NovaMon",
+  "description": "Windows PC monitoring software landing page with real screenshots and interactive preview.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
