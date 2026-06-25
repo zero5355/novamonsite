@@ -1,4 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+type BoardPost = {
+  id: string;
+  author: string;
+  title: string;
+  content: string;
+  created_at: string;
+};
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+const supabase = supabaseUrl && supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 // --- MULTILINGUAL TRANSLATION STATE DICTIONARY ---
 const t = {
@@ -9,6 +25,7 @@ const t = {
     pricingPlans: "라이선스 플랜",
     proAct: "프로 인증/구매 ↗",
     faq: "자주 묻는 질문",
+    communityBoard: "커뮤니티 게시판",
     freeDownload: "무료 다운로드",
     langSelect: "언어 선택",
     stableRelease: "Official Stable Release",
@@ -62,6 +79,23 @@ const t = {
     specSkinsDesc: "고전 게임 감성의 Cyberpunk부터 고급 Black Gold 테마까지 원클릭으로 완벽히 변환합니다.",
     pricingTitle: "합리적인 라이선스 플랜",
     pricingDesc: "한 번 구매로 영구적인 소장과 최대 2대 PC 동시 인증까지, 부담 없이 완벽한 성능 컨트롤러를 구비하세요.",
+    boardKicker: "Community Board",
+    boardTitle: "방문자 게시판",
+    boardDesc: "NovaMon 사용 후기, 질문, 버그 제보, 개선 아이디어를 남길 수 있는 공간입니다.",
+    boardStorageNotice: "게시글은 Supabase에 저장되어 모든 방문자가 같은 목록을 볼 수 있습니다.",
+    boardWriteTitle: "새 글 작성",
+    boardNameLabel: "작성자",
+    boardTitleLabel: "제목",
+    boardMessageLabel: "내용",
+    boardNamePlaceholder: "닉네임",
+    boardTitlePlaceholder: "글 제목을 입력하세요",
+    boardMessagePlaceholder: "질문이나 의견을 적어주세요",
+    boardSubmit: "게시하기",
+    boardEmpty: "아직 작성된 글이 없습니다.",
+    boardLoading: "게시글을 불러오는 중입니다.",
+    boardLoadError: "게시글을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.",
+    boardMissingConfig: "Supabase 환경변수가 설정되지 않아 게시판을 사용할 수 없습니다.",
+    boardCountLabel: "등록된 글",
     supportFaq: "자주 묻는 질문",
     supportFaqTag: "Support FAQ",
     sensorInfo: "시스템 센서 정보",
@@ -81,6 +115,7 @@ const t = {
     pricingPlans: "Pricing Plans",
     proAct: "Pro Activation/Purchase ↗",
     faq: "FAQ",
+    communityBoard: "Board",
     freeDownload: "Free Download",
     langSelect: "Language",
     stableRelease: "Official Stable Release",
@@ -134,6 +169,23 @@ const t = {
     specSkinsDesc: "Seamless one-click switching from Cyberpunk's retro-gaming neon tone to luxurious Black Gold designs.",
     pricingTitle: "Fair Licensing Plans",
     pricingDesc: "Acquire the complete lifetime license for up to 2 simultaneous PCs. Enjoy seamless monitoring without monthly subscriptions.",
+    boardKicker: "Community Board",
+    boardTitle: "Visitor Board",
+    boardDesc: "Leave NovaMon reviews, questions, bug reports, and feature ideas.",
+    boardStorageNotice: "Posts are saved in Supabase so every visitor sees the same board.",
+    boardWriteTitle: "Write a Post",
+    boardNameLabel: "Name",
+    boardTitleLabel: "Title",
+    boardMessageLabel: "Message",
+    boardNamePlaceholder: "Nickname",
+    boardTitlePlaceholder: "Enter a title",
+    boardMessagePlaceholder: "Write your question or feedback",
+    boardSubmit: "Post",
+    boardEmpty: "No posts yet.",
+    boardLoading: "Loading posts.",
+    boardLoadError: "Could not load posts. Please try again soon.",
+    boardMissingConfig: "Supabase environment variables are missing, so the board is unavailable.",
+    boardCountLabel: "Posts",
     supportFaq: "Frequently Asked Questions",
     supportFaqTag: "Support FAQ",
     sensorInfo: "System Sensor Metric",
@@ -153,6 +205,7 @@ const t = {
     pricingPlans: "ライセンスプラン",
     proAct: "Pro認証/購入 ↗",
     faq: "よくある質問",
+    communityBoard: "掲示板",
     freeDownload: "無料ダウンロード",
     langSelect: "言語選択",
     stableRelease: "公式安定版リリース",
@@ -206,6 +259,23 @@ const t = {
     specSkinsDesc: "クラシックゲーム風のCyberpunkから、エレガントなBlack Goldテーマまでワンクリックで瞬時に切り替えられます。",
     pricingTitle: "最適なライセンスプラン",
     pricingDesc: "一度のご購入で永久的な使用権と最大2台のPC認証に対応。毎月の自動決済なしでシステムリソース温度 of PC の完全制御を構築します。",
+    boardKicker: "Community Board",
+    boardTitle: "訪問者掲示板",
+    boardDesc: "NovaMonの感想、質問、不具合報告、改善アイデアを投稿できます。",
+    boardStorageNotice: "投稿はSupabaseに保存され、すべての訪問者が同じ掲示板を閲覧できます。",
+    boardWriteTitle: "新規投稿",
+    boardNameLabel: "名前",
+    boardTitleLabel: "タイトル",
+    boardMessageLabel: "内容",
+    boardNamePlaceholder: "ニックネーム",
+    boardTitlePlaceholder: "タイトルを入力",
+    boardMessagePlaceholder: "質問や意見を書いてください",
+    boardSubmit: "投稿する",
+    boardEmpty: "まだ投稿がありません。",
+    boardLoading: "投稿を読み込んでいます。",
+    boardLoadError: "投稿を読み込めませんでした。しばらくしてからもう一度お試しください。",
+    boardMissingConfig: "Supabase環境変数が未設定のため、掲示板を利用できません。",
+    boardCountLabel: "投稿数",
     supportFaq: "よくある質問",
     supportFaqTag: "Support FAQ",
     sensorInfo: "システムセンサー情報",
@@ -225,6 +295,7 @@ const t = {
     pricingPlans: "许可计划",
     proAct: "Pro激活/购买 ↗",
     faq: "常见问题",
+    communityBoard: "留言板",
     freeDownload: "免费下载",
     langSelect: "语言选择",
     stableRelease: "官方稳定版发布",
@@ -278,6 +349,23 @@ const t = {
     specSkinsDesc: "从经典游戏质感的 Cyberpunk 到高端的 Black Gold 主题，支持一键切换完美呈现。",
     pricingTitle: "价格合理实惠的许可计划",
     pricingDesc: "一次购买即可终身享有，最多支持 2 台设备验证。无需月度定期扣款即可拥有精细资源管理器。",
+    boardKicker: "Community Board",
+    boardTitle: "访客留言板",
+    boardDesc: "可留下 NovaMon 使用评价、问题、错误反馈和功能建议。",
+    boardStorageNotice: "留言会保存到 Supabase，所有访客都能看到同一个列表。",
+    boardWriteTitle: "发布留言",
+    boardNameLabel: "姓名",
+    boardTitleLabel: "标题",
+    boardMessageLabel: "内容",
+    boardNamePlaceholder: "昵称",
+    boardTitlePlaceholder: "输入标题",
+    boardMessagePlaceholder: "写下你的问题或反馈",
+    boardSubmit: "发布",
+    boardEmpty: "暂无留言。",
+    boardLoading: "正在加载留言。",
+    boardLoadError: "无法加载留言，请稍后重试。",
+    boardMissingConfig: "未设置 Supabase 环境变量，留言板暂不可用。",
+    boardCountLabel: "留言数",
     supportFaq: "常见问题",
     supportFaqTag: "Support FAQ",
     sensorInfo: "系统传感器指标",
@@ -297,6 +385,7 @@ const t = {
     pricingPlans: "Planes de Licencia",
     proAct: "Activación/Compra Pro ↗",
     faq: "Preguntas Frecuentes",
+    communityBoard: "Foro",
     freeDownload: "Descargar Gratis",
     langSelect: "Idioma",
     stableRelease: "Lanzamiento Estable Oficial",
@@ -350,6 +439,23 @@ const t = {
     specSkinsDesc: "Cambio impecable con un solo clic desde el nostálgico Cyberpunk hasta el lujoso diseño de Black Gold.",
     pricingTitle: "Planes de Licencia Justos",
     pricingDesc: "Adquiera la licencia perpetua de por vida para hasta 2 PC simultáneos. Disfrute del monitoreo sin cuotas mensuales recurrentes.",
+    boardKicker: "Community Board",
+    boardTitle: "Foro de Visitantes",
+    boardDesc: "Deje reseñas, preguntas, reportes de errores e ideas para NovaMon.",
+    boardStorageNotice: "Las publicaciones se guardan en Supabase para que todos vean el mismo foro.",
+    boardWriteTitle: "Nueva Publicación",
+    boardNameLabel: "Nombre",
+    boardTitleLabel: "Título",
+    boardMessageLabel: "Mensaje",
+    boardNamePlaceholder: "Apodo",
+    boardTitlePlaceholder: "Ingrese un título",
+    boardMessagePlaceholder: "Escriba su pregunta o comentario",
+    boardSubmit: "Publicar",
+    boardEmpty: "Aún no hay publicaciones.",
+    boardLoading: "Cargando publicaciones.",
+    boardLoadError: "No se pudieron cargar las publicaciones. Inténtelo de nuevo pronto.",
+    boardMissingConfig: "Faltan variables de entorno de Supabase, por lo que el foro no está disponible.",
+    boardCountLabel: "Publicaciones",
     supportFaq: "Preguntas Frecuentes",
     supportFaqTag: "Support FAQ",
     sensorInfo: "Sensor de Sistema",
@@ -844,8 +950,10 @@ import {
   ChevronDown, 
   Mail, 
   Monitor, 
+  MessageSquare,
+  PenLine,
   Plus,
-  Trash2,
+  Send,
   Sliders,
   Wifi,
   Maximize2,
@@ -886,6 +994,45 @@ export default function App() {
   
   // Track active FAQ accordion index
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(0);
+
+  const [boardPosts, setBoardPosts] = useState<BoardPost[]>([]);
+  const [boardForm, setBoardForm] = useState({
+    author: "",
+    title: "",
+    message: "",
+  });
+  const [isBoardLoading, setIsBoardLoading] = useState<boolean>(true);
+  const [isBoardSubmitting, setIsBoardSubmitting] = useState<boolean>(false);
+  const [boardError, setBoardError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadBoardPosts = async () => {
+      if (!supabase) {
+        setBoardError("missing-config");
+        setIsBoardLoading(false);
+        return;
+      }
+
+      setIsBoardLoading(true);
+      setBoardError(null);
+
+      const { data, error } = await supabase
+        .from("posts")
+        .select("id, author, title, content, created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setBoardError("load-failed");
+        setBoardPosts([]);
+      } else {
+        setBoardPosts(data ?? []);
+      }
+
+      setIsBoardLoading(false);
+    };
+
+    loadBoardPosts();
+  }, []);
 
   // Official screenshot gallery tab state
   const [activeGalleryTab, setActiveGalleryTab] = useState<"skins" | "dashboard" | "customizing">("skins");
@@ -1061,6 +1208,54 @@ export default function App() {
     window.open("https://github.com/zero5355/novamon/releases/tag/V0.3", "_blank");
   };
 
+  const handleBoardSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const author = boardForm.author.trim();
+    const title = boardForm.title.trim();
+    const message = boardForm.message.trim();
+
+    if (!author || !title || !message || !supabase || isBoardSubmitting) return;
+
+    setIsBoardSubmitting(true);
+    setBoardError(null);
+
+    const { data, error } = await supabase
+      .from("posts")
+      .insert({
+        author,
+        title,
+        content: message,
+      })
+      .select("id, author, title, content, created_at")
+      .single();
+
+    if (error) {
+      setBoardError("load-failed");
+    } else if (data) {
+      setBoardPosts((currentPosts) => [data, ...currentPosts]);
+      setBoardForm({ author: "", title: "", message: "" });
+    }
+
+    setIsBoardSubmitting(false);
+  };
+
+  const formatBoardDate = (createdAt: string) => {
+    const localeMap = {
+      ko: "ko-KR",
+      en: "en-US",
+      ja: "ja-JP",
+      zh: "zh-CN",
+      es: "es-ES",
+    };
+
+    return new Intl.DateTimeFormat(localeMap[lang], {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(createdAt));
+  };
+
   const getSkinsList = () => {
     return [
       "AIDA64 Dark",
@@ -1097,6 +1292,7 @@ export default function App() {
             <a href="#demo-viewer" className="hidden lg:inline-block text-xs font-semibold text-slate-400 hover:text-white transition-colors">{t[lang].liveDemo}</a>
             <a href="#features" className="hidden md:inline-block text-xs font-semibold text-slate-400 hover:text-white transition-colors">{t[lang].keySpecs}</a>
             <a href="#pricing" className="hidden sm:inline-block text-xs font-semibold text-slate-400 hover:text-white transition-colors">{t[lang].pricingPlans}</a>
+            <a href="#community-board" className="hidden sm:inline-block text-xs font-semibold text-slate-400 hover:text-white transition-colors">{t[lang].communityBoard}</a>
             <a href="https://8579228268598.gumroad.com/l/jicgv" target="_blank" rel="noopener noreferrer" className="hidden lg:inline-block text-xs font-semibold text-[#caa63d] hover:text-amber-300 transition-colors">{t[lang].proAct}</a>
             <a href="#faq" className="text-xs font-semibold text-slate-400 hover:text-white transition-colors">{t[lang].faq}</a>
             
@@ -1199,10 +1395,10 @@ export default function App() {
           <div className="text-center mb-8">
             <span className="text-[10px] uppercase tracking-widest text-[#caa63d] font-bold font-mono">Official Application GUI Dashboard</span>
             <h2 className="text-xl sm:text-2xl font-black text-white mt-1">
-              {t[lang].actTitle}
+              {t[lang].actualUiTitle}
             </h2>
             <p className="text-xs text-slate-400 mt-2 max-w-lg mx-auto">
-              {t[lang].actDesc}
+              {t[lang].actualUiDesc}
             </p>
           </div>
 
@@ -1571,8 +1767,8 @@ export default function App() {
         <div className="max-w-4xl mx-auto">
           
           <div className="text-center mb-12">
-            <span className="text-[#caa63d] text-[10px] font-extrabold uppercase tracking-widest">Specifications</span>
-            <h2 className="text-2xl font-black text-white mt-1">소프트웨어 주요 성능 스펙</h2>
+            <span className="text-[#caa63d] text-[10px] font-extrabold uppercase tracking-widest">{t[lang].specSpecs}</span>
+            <h2 className="text-2xl font-black text-white mt-1">{t[lang].specTitle}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6" id="features-grid">
@@ -1602,9 +1798,9 @@ export default function App() {
           
           <div className="text-center mb-12">
             <span className="text-[#caa63d] text-[10px] font-extrabold uppercase tracking-widest">Pricing Model</span>
-            <h2 className="text-2xl font-black text-white mt-1">합리적인 라이선스 플랜</h2>
+            <h2 className="text-2xl font-black text-white mt-1">{t[lang].pricingTitle}</h2>
             <p className="text-xs text-slate-400 mt-2 max-w-md mx-auto leading-relaxed">
-              한 번 구매로 영구적인 소장과 최대 2대 PC 동시 인증까지, 부담 없이 완벽한 성능 컨트롤러를 구비하세요.
+              {t[lang].pricingDesc}
             </p>
           </div>
 
@@ -1639,7 +1835,7 @@ export default function App() {
                       </span>
                       {isPro && (
                         <span className="text-[10px] text-amber-500 font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
-                          인기 추천
+                          {t[lang].popSelected}
                         </span>
                       )}
                     </div>
@@ -1656,12 +1852,12 @@ export default function App() {
                     {isPro ? (
                       <p className="text-[11px] font-bold text-[#caa63d] mb-4 flex items-center gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#caa63d]"></span>
-                        평생 사용 · 최대 2대 인증
+                        {t[lang].proBadgeText}
                       </p>
                     ) : (
                       <p className="text-[11px] font-semibold text-slate-450 mb-4 flex items-center gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
-                        30일 무료 체험 제공
+                        {t[lang].freeBadgeText}
                       </p>
                     )}
 
@@ -1711,13 +1907,143 @@ export default function App() {
         </div>
       </section>
 
+      {/* 6. Community Board */}
+      <section className="py-16 bg-slate-950/40 border-t border-slate-900 px-4 scroll-mt-16" id="community-board">
+        <div className="max-w-5xl mx-auto">
+          
+          <div className="text-center mb-10">
+            <span className="text-[#caa63d] text-[10px] font-extrabold uppercase tracking-widest">{t[lang].boardKicker}</span>
+            <h2 className="text-2xl font-black text-white mt-1">{t[lang].boardTitle}</h2>
+            <p className="text-xs text-slate-400 mt-2 max-w-xl mx-auto leading-relaxed">
+              {t[lang].boardDesc}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <form
+              onSubmit={handleBoardSubmit}
+              className="lg:col-span-4 bg-slate-900/35 border border-slate-900 rounded-xl p-5"
+              id="board-write-form"
+            >
+              <div className="flex items-center gap-2 mb-5">
+                <div className="w-8 h-8 rounded-lg bg-[#caa63d] text-slate-950 flex items-center justify-center">
+                  <PenLine className="w-4 h-4 stroke-[2.5]" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-white">{t[lang].boardWriteTitle}</h3>
+                  <p className="text-[10px] text-slate-500 font-mono">{t[lang].boardCountLabel}: {boardPosts.length}</p>
+                </div>
+              </div>
+
+              <div className="space-y-3.5">
+                <label className="block">
+                  <span className="block text-[11px] font-bold text-slate-300 mb-1.5">{t[lang].boardNameLabel}</span>
+                  <input
+                    value={boardForm.author}
+                    onChange={(event) => setBoardForm({ ...boardForm, author: event.target.value })}
+                    placeholder={t[lang].boardNamePlaceholder}
+                    className="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#caa63d] transition-colors"
+                    maxLength={24}
+                    disabled={!supabase || isBoardSubmitting}
+                    required
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="block text-[11px] font-bold text-slate-300 mb-1.5">{t[lang].boardTitleLabel}</span>
+                  <input
+                    value={boardForm.title}
+                    onChange={(event) => setBoardForm({ ...boardForm, title: event.target.value })}
+                    placeholder={t[lang].boardTitlePlaceholder}
+                    className="w-full rounded-lg bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#caa63d] transition-colors"
+                    maxLength={80}
+                    disabled={!supabase || isBoardSubmitting}
+                    required
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="block text-[11px] font-bold text-slate-300 mb-1.5">{t[lang].boardMessageLabel}</span>
+                  <textarea
+                    value={boardForm.message}
+                    onChange={(event) => setBoardForm({ ...boardForm, message: event.target.value })}
+                    placeholder={t[lang].boardMessagePlaceholder}
+                    className="w-full min-h-32 resize-y rounded-lg bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white placeholder:text-slate-600 outline-none focus:border-[#caa63d] transition-colors leading-relaxed"
+                    maxLength={800}
+                    disabled={!supabase || isBoardSubmitting}
+                    required
+                  />
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                disabled={!supabase || isBoardSubmitting}
+                className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#caa63d] hover:bg-[#b08e2d] disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 px-4 py-3 text-xs font-black transition-all active:scale-95"
+              >
+                <Send className="w-4 h-4 stroke-[2.5]" />
+                {t[lang].boardSubmit}
+              </button>
+
+              <p className="mt-4 text-[11px] text-slate-500 leading-relaxed border-t border-slate-900 pt-4">
+                {t[lang].boardStorageNotice}
+              </p>
+            </form>
+
+            <div className="lg:col-span-8 space-y-3" id="board-post-list">
+              {boardError && (
+                <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-xs text-amber-100 leading-relaxed">
+                  {boardError === "missing-config" ? t[lang].boardMissingConfig : t[lang].boardLoadError}
+                </div>
+              )}
+
+              {isBoardLoading ? (
+                <div className="min-h-52 rounded-xl border border-dashed border-slate-800 bg-slate-900/20 flex flex-col items-center justify-center text-center p-8">
+                  <MessageSquare className="w-8 h-8 text-slate-600 mb-3" />
+                  <p className="text-sm font-bold text-slate-300">{t[lang].boardLoading}</p>
+                </div>
+              ) : boardPosts.length === 0 ? (
+                <div className="min-h-52 rounded-xl border border-dashed border-slate-800 bg-slate-900/20 flex flex-col items-center justify-center text-center p-8">
+                  <MessageSquare className="w-8 h-8 text-slate-600 mb-3" />
+                  <p className="text-sm font-bold text-slate-300">{t[lang].boardEmpty}</p>
+                </div>
+              ) : (
+                boardPosts.map((post) => (
+                  <article
+                    key={post.id}
+                    className="rounded-xl border border-slate-900 bg-slate-900/30 hover:border-slate-800 transition-colors p-5"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-slate-500 mb-2">
+                          <span className="inline-flex items-center gap-1 rounded bg-slate-950 border border-slate-800 px-2 py-1 text-[#caa63d]">
+                            <MessageSquare className="w-3 h-3" />
+                            {post.author}
+                          </span>
+                          <span>{formatBoardDate(post.created_at)}</span>
+                        </div>
+                        <h3 className="text-base font-black text-white break-words">{post.title}</h3>
+                      </div>
+                    </div>
+                    <p className="mt-4 text-xs text-slate-300 leading-relaxed whitespace-pre-wrap break-words">
+                      {post.content}
+                    </p>
+                  </article>
+                ))
+              )}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* 6. FAQ Accordion Container */}
       <section className="py-16 bg-slate-950/40 border-t border-slate-900 px-4" id="faq">
         <div className="max-w-3xl mx-auto">
           
           <div className="text-center mb-12">
-            <span className="text-[#caa63d] text-[10px] font-extrabold uppercase tracking-widest">Support FAQ</span>
-            <h2 className="text-2xl font-black text-white mt-1">자주 묻는 질문</h2>
+            <span className="text-[#caa63d] text-[10px] font-extrabold uppercase tracking-widest">{t[lang].supportFaqTag}</span>
+            <h2 className="text-2xl font-black text-white mt-1">{t[lang].supportFaq}</h2>
           </div>
 
           <div className="space-y-3" id="faq-accordions">
