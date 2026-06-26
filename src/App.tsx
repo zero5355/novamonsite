@@ -1022,7 +1022,8 @@ export default function App() {
         .order("created_at", { ascending: false });
 
       if (error) {
-        setBoardError("load-failed");
+        console.error("Failed to load Supabase posts:", error);
+        setBoardError(error.message || "load-failed");
         setBoardPosts([]);
       } else {
         setBoardPosts(data ?? []);
@@ -1230,7 +1231,8 @@ export default function App() {
       .single();
 
     if (error) {
-      setBoardError("load-failed");
+      console.error("Failed to create Supabase post:", error);
+      setBoardError(error.message || "load-failed");
     } else if (data) {
       setBoardPosts((currentPosts) => [data, ...currentPosts]);
       setBoardForm({ author: "", title: "", message: "" });
@@ -1993,7 +1995,7 @@ export default function App() {
             <div className="lg:col-span-8 space-y-3" id="board-post-list">
               {boardError && (
                 <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-xs text-amber-100 leading-relaxed">
-                  {boardError === "missing-config" ? t[lang].boardMissingConfig : t[lang].boardLoadError}
+                  {boardError === "missing-config" ? t[lang].boardMissingConfig : `${t[lang].boardLoadError} (${boardError})`}
                 </div>
               )}
 
